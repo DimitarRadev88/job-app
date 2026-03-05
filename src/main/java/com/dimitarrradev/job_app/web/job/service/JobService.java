@@ -1,5 +1,7 @@
 package com.dimitarrradev.job_app.web.job.service;
 
+import com.dimitarrradev.job_app.web.company.dao.CompanyRepository;
+import com.dimitarrradev.job_app.web.company.model.Company;
 import com.dimitarrradev.job_app.web.job.dao.JobRepository;
 import com.dimitarrradev.job_app.web.job.model.Job;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,7 @@ import java.util.Optional;
 public class JobService {
 
     private final JobRepository jobRepository;
+    private final CompanyRepository companyRepository;
 
     public List<Job> findAll() {
         return jobRepository.findAll();
@@ -23,7 +26,13 @@ public class JobService {
     }
 
     public void createJob(Job job) {
-        jobRepository.saveAndFlush(job);
+        Optional<Company> optionalCompany = companyRepository.findById(job.getCompany().getId());
+
+        if (optionalCompany.isPresent()) {
+            job.setCompany(optionalCompany.get());
+            jobRepository.saveAndFlush(job);
+        }
+
     }
 
     public boolean delete(Long id) {

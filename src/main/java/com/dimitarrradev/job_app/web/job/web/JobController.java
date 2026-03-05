@@ -1,4 +1,4 @@
-package com.dimitarrradev.job_app.web;
+package com.dimitarrradev.job_app.web.job.web;
 
 import com.dimitarrradev.job_app.web.job.model.Job;
 import com.dimitarrradev.job_app.web.job.service.JobService;
