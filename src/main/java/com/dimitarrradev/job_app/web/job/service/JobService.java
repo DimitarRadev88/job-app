@@ -1,53 +1,58 @@
 package com.dimitarrradev.job_app.web.job.service;
 
+import com.dimitarrradev.job_app.web.job.dao.JobRepository;
 import com.dimitarrradev.job_app.web.job.model.Job;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class JobService {
 
-    private static long id = 1L;
-
-    private final List<Job> jobs = new ArrayList<>();
+    private final JobRepository jobRepository;
 
     public List<Job> findAll() {
-        return jobs;
+        return jobRepository.findAll();
     }
 
     public Job getJob(Long id) {
-        return jobs.stream()
-                .filter(job -> job.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+        return jobRepository.findById(id).orElse(null);
     }
 
     public void createJob(Job job) {
-        job.setId(id++);
-        jobs.add(job);
+        jobRepository.saveAndFlush(job);
     }
 
     public boolean delete(Long id) {
-        return jobs.removeIf(job -> job.getId().equals(id));
+        Optional<Job> optionalJob = jobRepository.findById(id);
+
+        if (optionalJob.isPresent()) {
+            jobRepository.delete(optionalJob.get());
+            return true;
+        }
+
+        return false;
     }
 
     public boolean update(Long id, Job updateJob) {
-        Job job = jobs.stream()
-                .filter(j -> j.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+        Optional<Job> optionalJob = jobRepository.findById(id);
 
-        if (job == null) {
+        if (optionalJob.isEmpty()) {
             return false;
         }
+
+        Job job = optionalJob.get();
 
         job.setTitle(updateJob.getTitle());
         job.setDescription(updateJob.getDescription());
         job.setMinSalary(updateJob.getMinSalary());
         job.setMaxSalary(updateJob.getMaxSalary());
         job.setLocation(updateJob.getLocation());
+
+        jobRepository.saveAndFlush(job);
 
         return true;
     }
