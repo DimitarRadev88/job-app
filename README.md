@@ -23,5 +23,3 @@ To stop the app, remove the containers, networks and volumes run:
 ```
 docker compose down --volumes
 ```
-
-
