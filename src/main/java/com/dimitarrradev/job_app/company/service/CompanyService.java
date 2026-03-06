@@ -1,7 +1,7 @@
-package com.dimitarrradev.job_app.web.company.service;
+package com.dimitarrradev.job_app.company.service;
 
-import com.dimitarrradev.job_app.web.company.dao.CompanyRepository;
-import com.dimitarrradev.job_app.web.company.model.Company;
+import com.dimitarrradev.job_app.company.dao.CompanyRepository;
+import com.dimitarrradev.job_app.company.model.Company;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

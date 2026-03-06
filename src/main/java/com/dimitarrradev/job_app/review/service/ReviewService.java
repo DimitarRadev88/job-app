@@ -1,9 +1,9 @@
-package com.dimitarrradev.job_app.web.review.service;
+package com.dimitarrradev.job_app.review.service;
 
-import com.dimitarrradev.job_app.web.company.dao.CompanyRepository;
-import com.dimitarrradev.job_app.web.company.model.Company;
-import com.dimitarrradev.job_app.web.review.dao.ReviewRepository;
-import com.dimitarrradev.job_app.web.review.model.Review;
+import com.dimitarrradev.job_app.company.dao.CompanyRepository;
+import com.dimitarrradev.job_app.company.model.Company;
+import com.dimitarrradev.job_app.review.dao.ReviewRepository;
+import com.dimitarrradev.job_app.review.model.Review;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,7 @@
-package com.dimitarrradev.job_app.web.review.web;
+package com.dimitarrradev.job_app.review.web;
 
-import com.dimitarrradev.job_app.web.review.model.Review;
-import com.dimitarrradev.job_app.web.review.service.ReviewService;
+import com.dimitarrradev.job_app.review.model.Review;
+import com.dimitarrradev.job_app.review.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

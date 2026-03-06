@@ -1,7 +1,6 @@
-package com.dimitarrradev.job_app.web.review.dao;
+package com.dimitarrradev.job_app.review.dao;
 
-import com.dimitarrradev.job_app.web.review.model.Review;
-import jakarta.persistence.OneToMany;
+import com.dimitarrradev.job_app.review.model.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,7 +1,7 @@
-package com.dimitarrradev.job_app.web.company.model;
+package com.dimitarrradev.job_app.company.model;
 
-import com.dimitarrradev.job_app.web.job.model.Job;
-import com.dimitarrradev.job_app.web.review.model.Review;
+import com.dimitarrradev.job_app.job.model.Job;
+import com.dimitarrradev.job_app.review.model.Review;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

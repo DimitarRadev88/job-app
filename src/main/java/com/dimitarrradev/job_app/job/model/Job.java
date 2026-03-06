@@ -1,26 +1,28 @@
-package com.dimitarrradev.job_app.web.review.model;
+package com.dimitarrradev.job_app.job.model;
 
-import com.dimitarrradev.job_app.web.company.model.Company;
+import com.dimitarrradev.job_app.company.model.Company;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
-@Table(name = "reviews")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Review {
+@Entity
+@Table(name = "jobs")
+public class Job {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
     private String description;
-    private Double rating;
+    private String minSalary;
+    private String maxSalary;
+    private String location;
     @ManyToOne
     private Company company;
 

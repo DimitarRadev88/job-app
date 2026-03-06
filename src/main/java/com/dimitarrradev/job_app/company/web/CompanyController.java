@@ -1,7 +1,7 @@
-package com.dimitarrradev.job_app.web.company.web;
+package com.dimitarrradev.job_app.company.web;
 
-import com.dimitarrradev.job_app.web.company.model.Company;
-import com.dimitarrradev.job_app.web.company.service.CompanyService;
+import com.dimitarrradev.job_app.company.model.Company;
+import com.dimitarrradev.job_app.company.service.CompanyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

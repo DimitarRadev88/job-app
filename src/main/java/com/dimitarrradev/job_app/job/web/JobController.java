@@ -1,7 +1,7 @@
-package com.dimitarrradev.job_app.web.job.web;
+package com.dimitarrradev.job_app.job.web;
 
-import com.dimitarrradev.job_app.web.job.model.Job;
-import com.dimitarrradev.job_app.web.job.service.JobService;
+import com.dimitarrradev.job_app.job.model.Job;
+import com.dimitarrradev.job_app.job.service.JobService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

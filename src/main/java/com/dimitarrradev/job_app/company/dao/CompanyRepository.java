@@ -1,6 +1,6 @@
-package com.dimitarrradev.job_app.web.company.dao;
+package com.dimitarrradev.job_app.company.dao;
 
-import com.dimitarrradev.job_app.web.company.model.Company;
+import com.dimitarrradev.job_app.company.model.Company;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
