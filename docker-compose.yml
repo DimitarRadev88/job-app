@@ -9,11 +9,13 @@ services:
       PGDATA: /data/postgres
     volumes:
       - postgres:/data/postgres
+      - ./dataset:/docker-entrypoint-initdb.d
     ports:
       - "5432:5432"
     networks:
       - postgres
     restart: on-failure
+
   pgadmin:
     container_name: pgadmin
     image: dpage/pgadmin4
@@ -28,11 +30,34 @@ services:
     networks:
       - postgres
     restart: on-failure
-  jobapp:
-    container_name: jobapp
-    image: dimitarrradev/jobappimage
+
+  companyservice:
+    container_name: company
+    image: dimitarrradev/companyservice
     ports:
-      - "8080:8080"
+      - "8085:8085"
+    depends_on:
+      - postgres
+    networks:
+      - postgres
+    restart: on-failure
+
+  jobservice:
+    container_name: job
+    image: dimitarrradev/jobservice
+    ports:
+      - "8082:8082"
+    depends_on:
+      - postgres
+    restart: on-failure
+    networks:
+      - postgres
+
+  reviewservice:
+    container_name: reviews
+    image: dimitarrradev/reviewservice
+    ports:
+      - "8084:8084"
     depends_on:
       - postgres
     restart: on-failure
