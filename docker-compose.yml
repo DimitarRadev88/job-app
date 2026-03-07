@@ -5,7 +5,6 @@ services:
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: peanutbutter
-      POSTGRES_DB: jobapp_db
       PGDATA: /data/postgres
     volumes:
       - postgres:/data/postgres
@@ -35,7 +34,7 @@ services:
     container_name: company
     image: dimitarrradev/companyservice
     ports:
-      - "8085:8085"
+      - "8083:8083"
     depends_on:
       - postgres
     networks:

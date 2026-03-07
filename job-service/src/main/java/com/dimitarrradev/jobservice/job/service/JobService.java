@@ -1,9 +1,12 @@
 package com.dimitarrradev.jobservice.job.service;
 
 import com.dimitarrradev.jobservice.job.dao.JobRepository;
+import com.dimitarrradev.jobservice.job.dto.JobServiceModel;
+import com.dimitarrradev.jobservice.job.external.CompanyModel;
 import com.dimitarrradev.jobservice.job.model.Job;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,9 +16,15 @@ import java.util.Optional;
 public class JobService {
 
     private final JobRepository jobRepository;
+    private final RestClient companyClient;
 
-    public List<Job> findAll() {
-        return jobRepository.findAll();
+    public List<JobServiceModel> findAll() {
+
+        return jobRepository.findAll()
+                .stream()
+                .map(this::map)
+                .toList();
+
     }
 
     public Job getJob(Long id) {
@@ -55,6 +64,26 @@ public class JobService {
         jobRepository.saveAndFlush(job);
 
         return true;
+    }
+
+    private CompanyModel getCompany(Long id) {
+        return companyClient
+                .get()
+                .uri("/{id}", id)
+                .retrieve()
+                .body(CompanyModel.class);
+    }
+
+    private JobServiceModel map(Job job) {
+        return new JobServiceModel(
+                job.getId(),
+                job.getTitle(),
+                job.getDescription(),
+                job.getMinSalary(),
+                job.getMaxSalary(),
+                job.getLocation(),
+                getCompany(job.getCompanyId())
+        );
     }
 
 }

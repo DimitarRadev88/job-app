@@ -1,6 +1,7 @@
 package com.dimitarrradev.jobservice.job.web;
 
 
+import com.dimitarrradev.jobservice.job.dto.JobServiceModel;
 import com.dimitarrradev.jobservice.job.model.Job;
 import com.dimitarrradev.jobservice.job.service.JobService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class JobController {
     private final JobService jobService;
 
     @GetMapping("")
-    public ResponseEntity<List<Job>> getAll() {
+    public ResponseEntity<List<JobServiceModel>> getAll() {
         return ResponseEntity
                 .ok(jobService.findAll());
     }
