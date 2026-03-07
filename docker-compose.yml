@@ -12,7 +12,7 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - postgres
+      - backend
     restart: on-failure
 
   pgadmin:
@@ -27,7 +27,7 @@ services:
     ports:
       - "5050:80"
     networks:
-      - postgres
+      - backend
     restart: on-failure
 
   companyservice:
@@ -38,7 +38,7 @@ services:
     depends_on:
       - postgres
     networks:
-      - postgres
+      - backend
     restart: on-failure
 
   jobservice:
@@ -50,7 +50,7 @@ services:
       - postgres
     restart: on-failure
     networks:
-      - postgres
+      - backend
 
   reviewservice:
     container_name: reviews
@@ -61,10 +61,21 @@ services:
       - postgres
     restart: on-failure
     networks:
+      - backend
+
+  serviceregistry:
+    container_name: registry
+    image: dimitarrradev/serviceregistry
+    ports:
+      - "8761:8761"
+    depends_on:
       - postgres
+    restart: on-failure
+    networks:
+      - backend
 
 networks:
-  postgres:
+  backend:
     driver: bridge
 
 volumes:

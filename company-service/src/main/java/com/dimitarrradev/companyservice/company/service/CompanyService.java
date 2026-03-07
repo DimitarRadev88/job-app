@@ -1,9 +1,14 @@
 package com.dimitarrradev.companyservice.company.service;
 
 import com.dimitarrradev.companyservice.company.dao.CompanyRepository;
+import com.dimitarrradev.companyservice.company.dto.CompanyServiceModel;
+import com.dimitarrradev.companyservice.company.external.ReviewModel;
 import com.dimitarrradev.companyservice.company.model.Company;
+import com.dimitarrradev.companyservice.company.util.ToModelMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -14,13 +19,26 @@ import java.util.Optional;
 public class CompanyService {
 
     private final CompanyRepository companyRepository;
+    private final ToModelMapper mapper;
 
-    public List<Company> getAll() {
-        return companyRepository.findAll();
+    private final RestClient reviewClient;
+
+    public List<CompanyServiceModel> getAll() {
+        return companyRepository.findAll().stream().map(
+                company -> {
+                    CompanyServiceModel companyServiceModel = mapper.toCompanyServiceModel(company);
+                    companyServiceModel.setReviews(getReviews(company.getId()));
+                    return companyServiceModel;
+                }).toList();
     }
 
-    public Company get(Long id) {
-        return companyRepository.findById(id).orElse(null);
+    public CompanyServiceModel get(Long id) {
+        return companyRepository.findById(id).map(
+                company -> {
+                    CompanyServiceModel companyServiceModel = mapper.toCompanyServiceModel(company);
+                    companyServiceModel.setReviews(getReviews(company.getId()));
+                    return companyServiceModel;
+                }).orElse(null);
     }
 
     public boolean update(Long id, Company updateCompany) {
@@ -62,6 +80,14 @@ public class CompanyService {
         companyRepository.delete(company.get());
 
         return true;
+    }
+
+    private List<ReviewModel> getReviews(Long companyId) {
+        return reviewClient.get()
+                .uri(uriBuilder -> uriBuilder.queryParam("companyId", companyId).build())
+                .retrieve()
+                .body(new ParameterizedTypeReference<>() {
+                });
     }
 
 }

@@ -1,4 +1,4 @@
-package com.dimitarrradev.jobservice.job.config;
+package com.dimitarrradev.companyservice.company.config;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,8 +11,8 @@ import org.springframework.web.client.RestClient;
 @Configuration
 public class RestClientConfig {
 
-    @Value("${company.service.uri}")
-    private String companyServiceURI;
+    @Value("${review.service.uri}")
+    private String reviewServiceURI;
 
     @Bean
     @LoadBalanced
@@ -28,9 +28,9 @@ public class RestClientConfig {
 
     @Bean
     @Primary
-    @Qualifier("companyClient")
-    RestClient companyClient(@Qualifier("loadBalancedClientBuilder") RestClient.Builder builder) {
-        return builder.baseUrl(companyServiceURI).build();
+    @Qualifier("reviewClient")
+    RestClient reviewClient(@Qualifier("loadBalancedClientBuilder") RestClient.Builder builder) {
+        return builder.baseUrl(reviewServiceURI).build();
     }
 
 }

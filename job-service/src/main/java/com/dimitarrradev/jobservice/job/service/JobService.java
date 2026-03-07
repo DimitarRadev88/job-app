@@ -4,7 +4,9 @@ import com.dimitarrradev.jobservice.job.dao.JobRepository;
 import com.dimitarrradev.jobservice.job.dto.JobServiceModel;
 import com.dimitarrradev.jobservice.job.external.CompanyModel;
 import com.dimitarrradev.jobservice.job.model.Job;
+import com.dimitarrradev.jobservice.job.util.ToModelMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -16,19 +18,32 @@ import java.util.Optional;
 public class JobService {
 
     private final JobRepository jobRepository;
-    private final RestClient companyClient;
+    private final ToModelMapper mapper;
+
+    @Autowired
+    private RestClient serviceRestClient;
 
     public List<JobServiceModel> findAll() {
 
         return jobRepository.findAll()
                 .stream()
-                .map(this::map)
+                .map(job -> {
+                    JobServiceModel jobServiceModel = mapper.toJobServiceModel(job);
+                    jobServiceModel.setCompany(getCompany(job.getId()));
+                    return jobServiceModel;
+                })
                 .toList();
 
     }
 
-    public Job getJob(Long id) {
-        return jobRepository.findById(id).orElse(null);
+    public JobServiceModel getJob(Long id) {
+        return jobRepository.findById(id)
+                .map(job -> {
+                    JobServiceModel jobServiceModel = mapper.toJobServiceModel(job);
+                    jobServiceModel.setCompany(getCompany(job.getId()));
+                    return jobServiceModel;
+                })
+                .orElse(null);
     }
 
     public void createJob(Job job) {
@@ -67,23 +82,12 @@ public class JobService {
     }
 
     private CompanyModel getCompany(Long id) {
-        return companyClient
+        return serviceRestClient
                 .get()
                 .uri("/{id}", id)
                 .retrieve()
                 .body(CompanyModel.class);
     }
 
-    private JobServiceModel map(Job job) {
-        return new JobServiceModel(
-                job.getId(),
-                job.getTitle(),
-                job.getDescription(),
-                job.getMinSalary(),
-                job.getMaxSalary(),
-                job.getLocation(),
-                getCompany(job.getCompanyId())
-        );
-    }
 
 }

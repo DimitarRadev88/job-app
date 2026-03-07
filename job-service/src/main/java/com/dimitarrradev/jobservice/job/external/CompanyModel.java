@@ -1,12 +1,11 @@
 package com.dimitarrradev.jobservice.job.external;
 
-import java.util.Set;
+import java.util.List;
 
-public record CompanyModel (
+public record CompanyModel(
         Long id,
         String name,
         String description,
-        Set<Long>jobsIds,
-        Set<Long> reviewsIds
+        List<ReviewModel> reviews
 ) {
 }

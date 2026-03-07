@@ -1,5 +1,6 @@
 package com.dimitarrradev.companyservice.company.web;
 
+import com.dimitarrradev.companyservice.company.dto.CompanyServiceModel;
 import com.dimitarrradev.companyservice.company.model.Company;
 import com.dimitarrradev.companyservice.company.service.CompanyService;
 import lombok.RequiredArgsConstructor;
@@ -16,14 +17,14 @@ public class CompanyController {
     private final CompanyService companyService;
 
     @GetMapping("")
-    public ResponseEntity<List<Company>> getAll(){
+    public ResponseEntity<List<CompanyServiceModel>> getAll(){
         return ResponseEntity
                 .ok(companyService.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Company> get(@PathVariable Long id) {
-        Company company = companyService.get(id);
+    public ResponseEntity<CompanyServiceModel> get(@PathVariable Long id) {
+        CompanyServiceModel company = companyService.get(id);
         if (company != null) {
             return ResponseEntity
                     .ok(company);
