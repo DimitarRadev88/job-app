@@ -1,12 +1,12 @@
 package com.dimitarrradev.jobservice.job.service;
 
+import com.dimitarrradev.jobservice.job.client.CompanyClient;
 import com.dimitarrradev.jobservice.job.dao.JobRepository;
 import com.dimitarrradev.jobservice.job.dto.JobServiceModel;
 import com.dimitarrradev.jobservice.job.external.CompanyModel;
 import com.dimitarrradev.jobservice.job.model.Job;
 import com.dimitarrradev.jobservice.job.util.ToModelMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -19,9 +19,7 @@ public class JobService {
 
     private final JobRepository jobRepository;
     private final ToModelMapper mapper;
-
-    @Autowired
-    private RestClient serviceRestClient;
+    private final CompanyClient companyClient;
 
     public List<JobServiceModel> findAll() {
 
@@ -29,7 +27,7 @@ public class JobService {
                 .stream()
                 .map(job -> {
                     JobServiceModel jobServiceModel = mapper.toJobServiceModel(job);
-                    jobServiceModel.setCompany(getCompany(job.getId()));
+                    jobServiceModel.setCompany(getCompany(job.getCompanyId()));
                     return jobServiceModel;
                 })
                 .toList();
@@ -40,7 +38,7 @@ public class JobService {
         return jobRepository.findById(id)
                 .map(job -> {
                     JobServiceModel jobServiceModel = mapper.toJobServiceModel(job);
-                    jobServiceModel.setCompany(getCompany(job.getId()));
+                    jobServiceModel.setCompany(getCompany(job.getCompanyId()));
                     return jobServiceModel;
                 })
                 .orElse(null);
@@ -82,11 +80,7 @@ public class JobService {
     }
 
     private CompanyModel getCompany(Long id) {
-        return serviceRestClient
-                .get()
-                .uri("/{id}", id)
-                .retrieve()
-                .body(CompanyModel.class);
+        return companyClient.getCompany(id);
     }
 
 

@@ -1,14 +1,13 @@
 package com.dimitarrradev.companyservice.company.service;
 
+import com.dimitarrradev.companyservice.company.client.ReviewClient;
 import com.dimitarrradev.companyservice.company.dao.CompanyRepository;
 import com.dimitarrradev.companyservice.company.dto.CompanyServiceModel;
 import com.dimitarrradev.companyservice.company.external.ReviewModel;
 import com.dimitarrradev.companyservice.company.model.Company;
 import com.dimitarrradev.companyservice.company.util.ToModelMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClient;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -20,8 +19,7 @@ public class CompanyService {
 
     private final CompanyRepository companyRepository;
     private final ToModelMapper mapper;
-
-    private final RestClient reviewClient;
+    private final ReviewClient reviewClient;
 
     public List<CompanyServiceModel> getAll() {
         return companyRepository.findAll().stream().map(
@@ -83,11 +81,7 @@ public class CompanyService {
     }
 
     private List<ReviewModel> getReviews(Long companyId) {
-        return reviewClient.get()
-                .uri(uriBuilder -> uriBuilder.queryParam("companyId", companyId).build())
-                .retrieve()
-                .body(new ParameterizedTypeReference<>() {
-                });
+        return reviewClient.getReviews(companyId);
     }
 
 }
