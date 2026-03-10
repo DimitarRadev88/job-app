@@ -1,0 +1,96 @@
+spring:
+  application:
+    name: company-service
+
+  config:
+    import: optional:configserver:http://configserver:8888
+
+  profiles:
+    active: default
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/company_service_db
+    username: root
+    password: peanutbutter
+
+  jpa:
+    database: POSTGRESQL
+    generate-ddl: true
+    show-sql: true
+    properties.hibernate.format_sql: true
+    hibernate.ddl-auto: create-drop
+
+
+#ACTUATOR
+management:
+
+  endpoints:
+    web:
+      exposure:
+        include: "health"
+
+  endpoint:
+    health:
+      show-details: always
+    shutdown:
+      enabled: true
+
+  health:
+    circuitbreakers:
+      enabled: true
+
+
+  info:
+    - env.enabled: true
+
+  ##ZIPKIN
+  tracing:
+    - sampling.probability: 1
+
+info:
+  app:
+    name: CompanyService
+    description: service for job-app
+
+eureka:
+  client:
+    serviceUrl.defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+resilience4j.circuitbreaker:
+  instances:
+    reviewBreaker:
+      slidingWindowSize: 10
+      slidingWindowType: count_based
+      minimumNumberOfCalls: 5
+      permittedNumberOfCallsInHalfOpenState: 3
+      waitDurationInOpenState: 10s
+      failureRateThreshold: 50
+      registerHealthIndicator: true
+      automaticTransitionFromOpenToHalfOpenEnabled: true
+
+resilience4j.retry:
+  instances:
+    retryGet:
+      maxAttempts: 5
+      waitDuration: 2s
+
+
+resilience4j.ratelimiter:
+  instances:
+    createLimiter:
+      timeoutDuration: 0
+      limitRefreshPeriod: 5000ms
+      limitForPeriod: 1
+    deleteLimiter:
+      timeoutDuration: 0
+      limitRefreshPeriod: 5000ms
+      limitForPeriod: 1
+    updateLimiter:
+      timeoutDuration: 0
+      limitRefreshPeriod: 5000ms
+      limitForPeriod: 1
+
+server:
+  port: 8083

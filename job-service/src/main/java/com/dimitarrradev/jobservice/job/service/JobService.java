@@ -6,9 +6,10 @@ import com.dimitarrradev.jobservice.job.dto.JobServiceModel;
 import com.dimitarrradev.jobservice.job.external.CompanyModel;
 import com.dimitarrradev.jobservice.job.model.Job;
 import com.dimitarrradev.jobservice.job.util.ToModelMapper;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClient;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,8 +22,8 @@ public class JobService {
     private final ToModelMapper mapper;
     private final CompanyClient companyClient;
 
+    @Retry(name = "retryGet", fallbackMethod = "findAllFallback")
     public List<JobServiceModel> findAll() {
-
         return jobRepository.findAll()
                 .stream()
                 .map(job -> {
@@ -31,9 +32,9 @@ public class JobService {
                     return jobServiceModel;
                 })
                 .toList();
-
     }
 
+    @CircuitBreaker(name = "cBreaker", fallbackMethod = "getJobFallback")
     public JobServiceModel getJob(Long id) {
         return jobRepository.findById(id)
                 .map(job -> {
@@ -83,5 +84,17 @@ public class JobService {
         return companyClient.getCompany(id);
     }
 
+    private List<JobServiceModel> findAllFallback(Exception e) {
+        return jobRepository.findAll()
+                .stream()
+                .map(mapper::toJobServiceModel)
+                .toList();
+    }
+
+    private JobServiceModel getJobFallback(Long id, Exception e) {
+        return jobRepository.findById(id)
+                .map(mapper::toJobServiceModel)
+                .orElse(null);
+    }
 
 }

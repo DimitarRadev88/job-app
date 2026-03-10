@@ -6,6 +6,8 @@ import com.dimitarrradev.companyservice.company.dto.CompanyServiceModel;
 import com.dimitarrradev.companyservice.company.external.ReviewModel;
 import com.dimitarrradev.companyservice.company.model.Company;
 import com.dimitarrradev.companyservice.company.util.ToModelMapper;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,7 @@ public class CompanyService {
     private final ToModelMapper mapper;
     private final ReviewClient reviewClient;
 
+    @Retry(name = "retryGet", fallbackMethod = "getAllFallback")
     public List<CompanyServiceModel> getAll() {
         return companyRepository.findAll().stream().map(
                 company -> {
@@ -30,6 +33,7 @@ public class CompanyService {
                 }).toList();
     }
 
+    @CircuitBreaker(name = "reviewBreaker", fallbackMethod = "getFallback")
     public CompanyServiceModel get(Long id) {
         return companyRepository.findById(id).map(
                 company -> {
@@ -82,6 +86,21 @@ public class CompanyService {
 
     private List<ReviewModel> getReviews(Long companyId) {
         return reviewClient.getReviews(companyId);
+    }
+
+    private List<CompanyServiceModel> getAllFallback(Exception e) {
+        return companyRepository
+                .findAll()
+                .stream()
+                .map(mapper::toCompanyServiceModel)
+                .toList();
+    }
+
+    private CompanyServiceModel getFallback(Long id, Exception e) {
+        return companyRepository
+                .findById(id)
+                .map(mapper::toCompanyServiceModel)
+                .orElse(null);
     }
 
 }

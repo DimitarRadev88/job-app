@@ -23,21 +23,21 @@ spring:
                 - Path=/reviews/**
 
             - id: eureka-server
-              uri: http://registry:8761
+              uri: http://serviceregistry:8761
               predicates:
                 - Path=/eureka/main
               filter:
                 - SetPath=/
 
             - id: eureka-server-static
-              uri: http://registry:8761
+              uri: http://serviceregistry:8761
               predicates:
                 - Path=/eureka/**
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://registry:8761/eureka/
+      defaultZone: http://serviceregistry:8761/eureka/
 
     register-with-eureka: true
     fetch-registry: true

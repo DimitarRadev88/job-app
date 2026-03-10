@@ -4,6 +4,7 @@ package com.dimitarrradev.jobservice.job.web;
 import com.dimitarrradev.jobservice.job.dto.JobServiceModel;
 import com.dimitarrradev.jobservice.job.model.Job;
 import com.dimitarrradev.jobservice.job.service.JobService;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +40,7 @@ public class JobController {
     }
 
     @PostMapping("")
+    @RateLimiter(name = "createLimiter", fallbackMethod = "createFallback")
     public ResponseEntity<String> createJob(@RequestBody Job job) {
         jobService.createJob(job);
 
@@ -48,6 +50,7 @@ public class JobController {
     }
 
     @DeleteMapping("/{id}")
+    @RateLimiter(name = "deleteLimiter", fallbackMethod = "deleteFallback")
     public ResponseEntity<String> deleteJob(@PathVariable Long id) {
         boolean removed = jobService.delete(id);
 
@@ -63,6 +66,7 @@ public class JobController {
     }
 
     @PatchMapping("/{id}")
+    @RateLimiter(name = "updateLimiter", fallbackMethod = "updateFallback")
     public ResponseEntity<String> updateJob(@PathVariable Long id, @RequestBody Job job) {
         boolean updated = jobService.update(id, job);
 
@@ -75,6 +79,22 @@ public class JobController {
         return ResponseEntity
                 .notFound()
                 .build();
+    }
+
+    private ResponseEntity<String> createFallback(Job job, Exception e) {
+        return getTooManyRequests();
+    }
+
+    private ResponseEntity<String> deleteFallback(Long id, Exception e) {
+        return getTooManyRequests();
+    }
+
+    private ResponseEntity<String> updateFallback(Long id, Job job, Exception e) {
+        return getTooManyRequests();
+    }
+
+    private ResponseEntity<String> getTooManyRequests() {
+        return ResponseEntity.status(429).body("Too many requests!");
     }
 
 }

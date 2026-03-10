@@ -76,7 +76,7 @@ services:
       - backend
 
   serviceregistry:
-    container_name: registry
+    container_name: serviceregistry
     image: dimitarrradev/serviceregistry
     ports:
       - "8761:8761"
