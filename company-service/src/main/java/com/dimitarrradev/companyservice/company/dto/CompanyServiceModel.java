@@ -12,5 +12,6 @@ public class CompanyServiceModel {
     private Long id;
     private String name;
     private String description;
+    private Double averageRating;
     private List<ReviewModel> reviews;
 }

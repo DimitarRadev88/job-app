@@ -1,12 +1,16 @@
 package com.dimitarrradev.reviewservice.review.web;
 
+import com.dimitarrradev.reviewservice.review.dto.Rating;
+import com.dimitarrradev.reviewservice.review.dto.ReviewMessage;
 import com.dimitarrradev.reviewservice.review.model.Review;
+import com.dimitarrradev.reviewservice.review.service.ReviewMessageService;
 import com.dimitarrradev.reviewservice.review.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -14,6 +18,7 @@ import java.util.List;
 public class ReviewController {
 
     private final ReviewService reviewService;
+    private final ReviewMessageService messageService;
 
     @GetMapping("")
     public ResponseEntity<List<Review>> getAll(@RequestParam Long companyId) {
@@ -23,9 +28,10 @@ public class ReviewController {
 
     @PostMapping("")
     public ResponseEntity<String> create(@RequestBody Review review) {
-        boolean isCreated = reviewService.create(review);
+        Optional<Rating> rating = reviewService.create(review);
 
-        if (isCreated) {
+        if (rating.isPresent()) {
+            messageService.sendMessage(rating.get());
             return ResponseEntity
                     .ok("Successfully created review");
         }
@@ -73,6 +79,11 @@ public class ReviewController {
         return ResponseEntity
                 .notFound()
                 .build();
+    }
+
+    @GetMapping("/average-rating")
+    public ResponseEntity<Rating> getAverageRating(@RequestParam Long companyId) {
+        return ResponseEntity.ok(reviewService.getAverageRating(companyId));
     }
 
 }

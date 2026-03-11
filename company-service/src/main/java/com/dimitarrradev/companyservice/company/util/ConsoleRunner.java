@@ -20,6 +20,7 @@ public class ConsoleRunner implements CommandLineRunner {
         companyRepository.saveAndFlush(new Company(null,
                 "Company",
                 "Company Description",
+                0.0,
                 new LinkedHashSet<>(Set.of(1L)),
                 new LinkedHashSet<>(Set.of(1L)))
         );

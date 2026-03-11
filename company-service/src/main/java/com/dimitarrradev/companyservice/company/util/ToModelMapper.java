@@ -12,6 +12,7 @@ public class ToModelMapper {
                 company.getId(),
                 company.getName(),
                 company.getDescription(),
+                company.getAverageRating(),
                 null
         );
     }

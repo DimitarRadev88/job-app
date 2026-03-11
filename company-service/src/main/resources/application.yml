@@ -20,6 +20,11 @@ spring:
     properties.hibernate.format_sql: true
     hibernate.ddl-auto: create-drop
 
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: user
+    password: peanutbutter
 
 #ACTUATOR
 management:
@@ -38,7 +43,6 @@ management:
   health:
     circuitbreakers:
       enabled: true
-
 
   info:
     - env.enabled: true
@@ -75,7 +79,6 @@ resilience4j.retry:
     retryGet:
       maxAttempts: 5
       waitDuration: 2s
-
 
 resilience4j.ratelimiter:
   instances:

@@ -3,6 +3,7 @@ package com.dimitarrradev.companyservice.company.service;
 import com.dimitarrradev.companyservice.company.client.ReviewClient;
 import com.dimitarrradev.companyservice.company.dao.CompanyRepository;
 import com.dimitarrradev.companyservice.company.dto.CompanyServiceModel;
+import com.dimitarrradev.companyservice.company.dto.Rating;
 import com.dimitarrradev.companyservice.company.external.ReviewModel;
 import com.dimitarrradev.companyservice.company.model.Company;
 import com.dimitarrradev.companyservice.company.util.ToModelMapper;
@@ -103,4 +104,16 @@ public class CompanyService {
                 .orElse(null);
     }
 
+    public void update(Rating rating) {
+        Optional<Company> byId = companyRepository.findById(rating.companyId());
+
+        System.out.println();
+        if (byId.isPresent()) {
+            Company company = byId.get();
+            System.out.println();
+            company.setAverageRating(rating.value());
+            companyRepository.saveAndFlush(company);
+        }
+
+    }
 }

@@ -22,6 +22,7 @@ public class Company {
     private Long id;
     private String name;
     private String description;
+    private Double averageRating;
     private Set<Long> jobsIds;
     private Set<Long> reviewsIds;
 

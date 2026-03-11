@@ -1,6 +1,7 @@
 package com.dimitarrradev.reviewservice.review.service;
 
 import com.dimitarrradev.reviewservice.review.dao.ReviewRepository;
+import com.dimitarrradev.reviewservice.review.dto.Rating;
 import com.dimitarrradev.reviewservice.review.model.Review;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,9 +19,11 @@ public class ReviewService {
         return reviewRepository.findAllByCompanyId(companyId);
     }
 
-    public boolean create(Review review) {
-        reviewRepository.saveAndFlush(review);
-        return true;
+    public Optional<Rating> create(Review review) {
+        Review saved = reviewRepository.saveAndFlush(review);
+
+        Rating value = new Rating(saved.getCompanyId(), reviewRepository.calculateAverageRating(saved.getCompanyId()));
+        return Optional.of(value);
     }
 
     public Review get(Long reviewId) {
@@ -48,11 +51,14 @@ public class ReviewService {
 
         if (optionalReview.isPresent()) {
             Review review = optionalReview.get();
-
             reviewRepository.delete(review);
             return true;
         }
 
         return false;
+    }
+
+    public Rating getAverageRating(Long companyId) {
+        return new Rating(companyId, reviewRepository.calculateAverageRating(companyId));
     }
 }
