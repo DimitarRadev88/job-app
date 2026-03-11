@@ -51,6 +51,9 @@ management:
   ##ZIPKIN
   tracing:
     - sampling.probability: 1
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
 
 info:
   app:
